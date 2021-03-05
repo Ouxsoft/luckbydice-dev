@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxynet
+
+  php-fpm:
+    networks:
+      - proxynet
+
+  jenkins:
+    build: ./docker/jenkins
+    container_name: jenkins
+    restart: always
+    volumes:
+      - ./docker/jenkins/jenkins_home:/var/jenkins_home
+    depends_on:
+      - nginx-proxy
+    ports:
+      - "8081:8081"
+    environment:
+      - VIRTUAL_HOST=cd.localhost
+      - VIRTUAL_PORT=8081
+    networks:
+      - proxynet
+
+  sphinx-docs:
+    build: ./docker/sphinx-docs
+    container_name: sphinx-docs
+    volumes:
+      - ./app:/app
+
+networks:
+  proxynet:
+    external: false
