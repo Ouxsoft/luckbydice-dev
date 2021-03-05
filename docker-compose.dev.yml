@@ -2,9 +2,9 @@ version: "3.8"
 
 services:
 
-  nginx-proxy:
+  lbd-nginx-proxy:
     image: jwilder/nginx-proxy
-    container_name: proxy
+    container_name: lbd-proxy
     restart: always
     ports:
       - "80:80"
@@ -13,18 +13,18 @@ services:
     networks:
       - proxynet
 
-  php-fpm:
+  lbd-php-fpm:
     networks:
       - proxynet
 
-  jenkins:
+  lbd-jenkins:
     build: ./docker/jenkins
-    container_name: jenkins
+    container_name: lbd-jenkins
     restart: always
     volumes:
       - ./docker/jenkins/jenkins_home:/var/jenkins_home
     depends_on:
-      - nginx-proxy
+      - lbd-nginx-proxy
     ports:
       - "8081:8081"
     environment:
@@ -33,9 +33,9 @@ services:
     networks:
       - proxynet
 
-  sphinx-docs:
+  lbd-sphinx-docs:
     build: ./docker/sphinx-docs
-    container_name: sphinx-docs
+    container_name: lbd-sphinx-docs
     volumes:
       - ./app:/app
 

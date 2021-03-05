@@ -62,7 +62,7 @@ function docker_exec {
 
 
   if [ "$container" = "" ]; then
-    container="php-fpm"
+    container="lbd-php-fpm"
   fi
 
   if [ "$cmd" = "" ]; then
@@ -95,8 +95,8 @@ function docker_start {
     fi
     # must be ran outside of Dockerfile due to mount
     echo "Update composer"
-    docker exec php-fpm composer update -d .
-    docker exec php-fpm composer dump-autoload --optimize -d .
+    docker exec lbd-php-fpm composer update -d .
+    docker exec lbd-php-fpm composer dump-autoload --optimize -d .
   else
     echo "A valid stack environment required, e.g.:"
     echo "./stack start dev"
@@ -164,7 +164,7 @@ function docker_build {
 }
 
 function docker_test {
-  docker exec php-fpm composer test
+  docker exec lbd-php-fpm composer test
 }
 
 function docker_build_docs {
